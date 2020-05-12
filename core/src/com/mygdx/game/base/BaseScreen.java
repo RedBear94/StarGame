@@ -108,7 +108,8 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        // Метод touchDown - переводится в новую координатную систему / mul - умножение матриц
+        // Метод touchDown - переводится в новую координатную систему: переворачивается ось Y,
+        // затем mul - умножение на матрицу (преобразований)
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchDown(touch, pointer, button);
         return false;

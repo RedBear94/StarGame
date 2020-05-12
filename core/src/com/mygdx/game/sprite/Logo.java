@@ -11,6 +11,7 @@ public class Logo extends Sprite {
     private Vector2 v;
     private Vector2 touch;
     private Vector2 common;
+
     private static final float V_LEN = 0.01f;
 
     public Logo(Texture texture) {
@@ -24,24 +25,25 @@ public class Logo extends Sprite {
     public void resize(Rect worldBounds){
         setHeightProportion(0.2f);
         Vector2 v = new Vector2(worldBounds.getLeft() + this.getHalfWidth(), worldBounds.getBottom() + this.getHalfHeight());
-        this.pos.set(v); // выравнивание по центру
+        this.pos.set(v);
+    }
+
+    @Override
+    public void update(float delta){
+        common.set(this.touch);
+        if(common.sub(pos).len() > V_LEN){
+            pos.add(v);
+        } else {
+            pos.set(touch);
+            v.setZero();
+        }
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         this.touch.set(touch);
-        v.set(touch.cpy().sub(this.pos));
+        v.set(touch.sub(this.pos));
         v.setLength(V_LEN);
         return super.touchDown(touch, pointer, button);
-    }
-
-    public void changePosition() {
-        common.set(this.touch);
-        if(common.sub(this.pos).len() > V_LEN){
-            this.pos.add(v);
-        } else {
-            this.pos.set(this.touch);
-            v.setZero();
-        }
     }
 }

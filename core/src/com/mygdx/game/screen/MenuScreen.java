@@ -31,13 +31,8 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-
-        logo.changePosition();
-
-        batch.begin();
-        background.draw(batch);
-        logo.draw(batch);
-        batch.end();
+        update(delta);
+        draw();
     }
 
     @Override
@@ -45,6 +40,17 @@ public class MenuScreen extends BaseScreen {
         img.dispose();
         bg.dispose();
         super.dispose();
+    }
+
+    private void update(float delta){
+        logo.update(delta);
+    }
+
+    private void draw(){
+        batch.begin();
+        background.draw(batch);
+        logo.draw(batch);
+        batch.end();
     }
 
     @Override
