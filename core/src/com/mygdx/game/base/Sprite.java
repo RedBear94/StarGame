@@ -11,11 +11,18 @@ public class Sprite extends Rect {
     protected float angle; // угол поворота
     protected float scale = 1f; // масштаб обхекта
     protected TextureRegion[] regions; // массив из текстур
-    protected  int frame = 0; // указатель на текущий кадр в массиве
+    protected int frame = 0; // указатель на текущий кадр в массиве
 
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1];
         regions[0] = region;
+    }
+
+    public Sprite(TextureRegion[] regions) {
+        this.regions = new TextureRegion[regions.length];
+        for(int i = 0; i < regions.length; i++) {
+            this.regions[i] = regions[i];
+        }
     }
 
     // Рассчет справйта от заданной высоты

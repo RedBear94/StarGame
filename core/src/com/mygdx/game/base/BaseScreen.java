@@ -37,6 +37,7 @@ public class BaseScreen implements Screen, InputProcessor {
         touch = new Vector2();
     }
 
+    // delta - отрезок времени рассчитываемый libGDX
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.3f, 0.2f, 0.1f, 1);
