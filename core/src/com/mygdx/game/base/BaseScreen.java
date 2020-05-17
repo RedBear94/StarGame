@@ -37,6 +37,7 @@ public class BaseScreen implements Screen, InputProcessor {
         touch = new Vector2();
     }
 
+    // delta - отрезок времени рассчитываемый libGDX
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.3f, 0.2f, 0.1f, 1);
@@ -108,7 +109,8 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        // Метод touchDown - переводится в новую координатную систему / mul - умножение матриц
+        // Метод touchDown - переводится в новую координатную систему: переворачивается ось Y,
+        // затем mul - умножение на матрицу (преобразований)
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchDown(touch, pointer, button);
         return false;

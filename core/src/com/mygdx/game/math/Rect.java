@@ -93,11 +93,17 @@ public class Rect {
     }
 
     public boolean isMe(Vector2 touch) {
-        return touch.x >= getLeft() && touch.x <= getRight() && touch.y >= getBottom() && touch.y <= getTop();
+        return touch.x >= getLeft() &&
+                touch.x <= getRight() &&
+                touch.y >= getBottom() &&
+                touch.y <= getTop();
     }
 
     public boolean isOutside(Rect other) {
-        return getLeft() > other.getRight() || getRight() < other.getLeft() || getBottom() > other.getTop() || getTop() < other.getBottom();
+        return getLeft() > other.getRight() ||
+                getRight() < other.getLeft() ||
+                getBottom() > other.getTop() ||
+                getTop() < other.getBottom();
     }
 
     @Override
