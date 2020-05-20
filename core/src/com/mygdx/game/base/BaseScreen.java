@@ -1,5 +1,6 @@
 package com.mygdx.game.base;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
@@ -22,6 +23,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     private Vector2 touch;
 
+    private Music music;
     // Screen methods
 
     @Override
@@ -35,6 +37,10 @@ public class BaseScreen implements Screen, InputProcessor {
         worldToGl = new Matrix4();
         screenToWorld = new Matrix3();
         touch = new Vector2();
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.play();
+        music.setLooping(true);
     }
 
     // delta - отрезок времени рассчитываемый libGDX
@@ -67,7 +73,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     // Изменение размеров в новой заданной системе координат
     public void resize(Rect worldBounds) {
-        System.out.println("resize worldBounds.Height = " + worldBounds.getHeight() + " worldBounds.Width = " + worldBounds.getWidth());
+        /*System.out.println("resize worldBounds.Height = " + worldBounds.getHeight() + " worldBounds.Width = " + worldBounds.getWidth());*/
     }
 
     @Override
@@ -87,6 +93,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
+        music.dispose();
         batch.dispose();
     }
 
@@ -117,7 +124,7 @@ public class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        System.out.println("touchDown touch.x = " + touch.x + " touch.y = " + touch.y);
+        /*System.out.println("touchDown touch.x = " + touch.x + " touch.y = " + touch.y);*/
         return false;
     }
 
@@ -129,7 +136,7 @@ public class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        System.out.println("touchUp touch.x = " + touch.x + " touch.y = " + touch.y);
+        /*System.out.println("touchUp touch.x = " + touch.x + " touch.y = " + touch.y);*/
         return false;
     }
 
@@ -141,7 +148,7 @@ public class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean touchDragged(Vector2 touch, int pointer) {
-        System.out.println("touchDragged touch.x = " + touch.x + " touch.y = " + touch.y);
+        /*System.out.println("touchDragged touch.x = " + touch.x + " touch.y = " + touch.y);*/
         return false;
     }
 
