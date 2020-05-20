@@ -15,7 +15,7 @@ import com.mygdx.game.math.Rect;
 public class BaseScreen implements Screen, InputProcessor {
     protected SpriteBatch batch; // Рисует пакетные четырехугольники, используя индексы
     private Rect screenBounds; // 1-й экран с координатами в px
-    private Rect worldBounds; // Рабочая координатная сетка
+    protected Rect worldBounds; // Рабочая координатная сетка
     private Rect glBounds; // Координатная сетка OpenGL
 
     private Matrix4 worldToGl; // Матрица проекции для batch (worldBounds->glBounds)
@@ -39,8 +39,8 @@ public class BaseScreen implements Screen, InputProcessor {
         touch = new Vector2();
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
-        music.play();
         music.setLooping(true);
+        music.play();
     }
 
     // delta - отрезок времени рассчитываемый libGDX
