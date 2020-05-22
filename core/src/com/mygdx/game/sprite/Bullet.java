@@ -35,8 +35,8 @@ public class Bullet extends Sprite {
     public void set(
             Sprite owner,
             TextureRegion region,
-            Vector2 pos0,
-            Vector2 v0,
+            Vector2 pos0, // позиция пули
+            Vector2 v0, // направление
             float height,
             Rect worldBounds,
             int damage

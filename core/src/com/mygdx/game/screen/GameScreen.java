@@ -7,9 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.base.BaseScreen;
 import com.mygdx.game.math.Rect;
 import com.mygdx.game.pool.BulletPool;
+import com.mygdx.game.pool.EnemyPool;
+import com.mygdx.game.pool.ExplosionPool;
 import com.mygdx.game.sprite.Background;
 import com.mygdx.game.sprite.MainShip;
 import com.mygdx.game.sprite.Star;
+import com.mygdx.game.utils.EnemyEmitter;
 
 public class GameScreen extends BaseScreen {
 
@@ -21,6 +24,9 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas textureAtlas;
     private MainShip mainShip;
     private BulletPool bulletPool;
+    private EnemyPool enemyPool;
+    private ExplosionPool explosionPool;
+    private EnemyEmitter enemyEmitter;
 
     @Override
     public void show() {
@@ -36,7 +42,10 @@ public class GameScreen extends BaseScreen {
 
         textureAtlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
         bulletPool = new BulletPool();
-        mainShip = new MainShip(textureAtlas, bulletPool);
+        explosionPool = new ExplosionPool(textureAtlas);
+        enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds);
+        mainShip = new MainShip(textureAtlas, bulletPool, explosionPool);
+        enemyEmitter = new EnemyEmitter(textureAtlas, enemyPool);
     }
 
     @Override
@@ -50,10 +59,11 @@ public class GameScreen extends BaseScreen {
     @Override
     public void resize(Rect worldBounds) {
         background.resize(worldBounds);
-        mainShip.resize(worldBounds);
         for(Star star : stars){
             star.resize(worldBounds);
         }
+        mainShip.resize(worldBounds);
+        enemyEmitter.resize(worldBounds);
     }
 
     @Override
@@ -61,6 +71,9 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         textureAtlas.dispose();
+        enemyPool.dispose();
+        explosionPool.dispose();
+        mainShip.dispose();
         super.dispose();
     }
 
@@ -93,11 +106,16 @@ public class GameScreen extends BaseScreen {
             star.update(delta);
         }
         bulletPool.updateActiveSprites(delta);
+        enemyPool.updateActiveSprites(delta);
+        explosionPool.updateActiveSprites(delta);
         mainShip.update(delta);
+        enemyEmitter.generate(delta);
     }
 
     private void free(){
         bulletPool.freeAllDestroyed();
+        enemyPool.freeAllDestroyed();
+        explosionPool.freeAllDestroyed();
     }
 
     private void draw(){
@@ -108,6 +126,8 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool.drawActiveSprites(batch);
         mainShip.draw(batch);
+        enemyPool.drawActiveSprites(batch);
+        explosionPool.drawActiveSprites(batch);
         batch.end();
     }
 }
