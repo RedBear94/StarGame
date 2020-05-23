@@ -10,6 +10,8 @@ import com.mygdx.game.pool.ExplosionPool;
 
 public class Ship extends Sprite {
 
+    private static final float DAMAGE_ANIMATE_INTERNAL = 0.1f;
+
     protected final Vector2 v0; // вектор направления
     protected final Vector2 v;  // вектор скорости
 
@@ -19,6 +21,7 @@ public class Ship extends Sprite {
     protected BulletPool bulletPool;
     protected TextureRegion bulletRegion;
     protected Vector2 bulletV; // Направление пули
+    protected Vector2 bulletPos;
     protected float bulletHeight;
     protected int damage;
 
@@ -30,11 +33,16 @@ public class Ship extends Sprite {
 
     protected int hp;
 
+    protected float damageAnimateTimer;
+
     public Ship(TextureRegion region, int rows, int cols, int frames) {
         super(region, rows, cols, frames);
         v0 = new Vector2();
         v = new Vector2();
+        bulletV = new Vector2();
+        bulletPos = new Vector2();
         pressedAttack = false;
+        damageAnimateTimer = DAMAGE_ANIMATE_INTERNAL;
     }
 
     public Ship(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound shootSound){
@@ -45,7 +53,9 @@ public class Ship extends Sprite {
         v0 = new Vector2();
         v = new Vector2();
         bulletV = new Vector2();
-        pressedAttack = false;
+        bulletPos = new Vector2();
+        pressedAttack = true;
+        damageAnimateTimer = DAMAGE_ANIMATE_INTERNAL;
     }
 
     @Override
@@ -58,6 +68,13 @@ public class Ship extends Sprite {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
+        damageAnimateTimer += delta;
+        if(damageAnimateTimer >= DAMAGE_ANIMATE_INTERNAL){
+            frame = 0;
+        }
+    }
+
+    protected void autoShoot(float delta){
         if(pressedAttack){
             reloadTimer += delta;
             if (reloadTimer >= reloadInterval){
@@ -75,12 +92,27 @@ public class Ship extends Sprite {
         boom();
     }
 
+    public void damage(int damage){
+        damageAnimateTimer = 0f;
+        frame = 1;
+
+        hp -= damage;
+        if(hp<=0){
+            hp = 0;
+            destroy();
+        }
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
     protected void shoot(){
         shootSound.play(1.0f);
         Bullet bullet = bulletPool.obtain();
         bullet.set(this,
                 bulletRegion,
-                pos,
+                bulletPos,
                 bulletV,
                 bulletHeight,
                 worldBounds,

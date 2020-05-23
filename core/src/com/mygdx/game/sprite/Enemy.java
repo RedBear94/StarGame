@@ -9,33 +9,24 @@ import com.mygdx.game.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
-    private final Vector2 fastSpeedV;
-    private boolean shipIsReady = false;
+    private static final float SPEED_V_Y = -0.3f;
 
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound shootSound) {
         super(bulletPool, explosionPool, worldBounds, shootSound);
-        fastSpeedV = new Vector2(0, -0.3f);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        if(getBottom() <= worldBounds.getBottom()){
-            destroy();
+
+        if(getTop() < worldBounds.getTop()){
+            v.set(v0);
+            bulletPos.set(pos.x, pos.y - getHalfHeight());
+            autoShoot(delta);
         }
 
-        if(getTop() >= (worldBounds.getTop())){
-            setSpeed(fastSpeedV);
-
-            // ??? Без этой строчки маленькие корабли не стреляют сразу при появлении ???
-            this.shipIsReady = false;
-        } else {
-            setSpeed(v0);
-            if(shipIsReady == false){
-                this.pressedAttack = true;
-                this.reloadTimer = reloadInterval;
-                this.shipIsReady = true;
-            }
+        if(getBottom() <= worldBounds.getBottom()){
+            destroy();
         }
     }
 
@@ -59,11 +50,15 @@ public class Enemy extends Ship {
         this.reloadInterval = reloadInterval;
         this.reloadTimer = reloadInterval;
         this.hp = hp;
-        this.v.set(v0);
         setHeightProportion(height);
+        v.set(0, SPEED_V_Y);
     }
 
-    public void setSpeed(Vector2 v){
-        this.v.set(v);
+    public boolean isBulletCollision(Rect bullet){
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > getTop()
+                || bullet.getTop() < pos.y
+        );
     }
 }

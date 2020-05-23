@@ -2,20 +2,18 @@ package com.mygdx.game.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.base.Sprite;
 import com.mygdx.game.math.Rect;
 import com.mygdx.game.pool.BulletPool;
 import com.mygdx.game.pool.ExplosionPool;
 
 public class MainShip extends Ship {
+
     private static final float SIZE = 0.15f;
     private static final float MARGIN = 0.05f;
     private static final int INVALID_POINTER = -1;
-    private static final int HP = 100;
+    private static final int HP = 1;
 
     private int leftPointer;
     private int rightPointer;
@@ -59,6 +57,9 @@ public class MainShip extends Ship {
     @Override
     public void update(float delta){
         super.update(delta);
+        bulletPos.set(pos.x, pos.y + getHalfHeight());
+        autoShoot(delta);
+
         if(getLeft() < worldBounds.getLeft()){
             stop();
             setLeft(worldBounds.getLeft());
@@ -162,6 +163,14 @@ public class MainShip extends Ship {
         return false;
     }
 
+    public boolean isBulletCollision(Rect bullet){
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > pos.y
+                || bullet.getTop() < getBottom()
+        );
+    }
+
     public void dispose(){
         shootSound.dispose();
     }
@@ -176,5 +185,12 @@ public class MainShip extends Ship {
 
     private void stop(){
         v.setZero();
+    }
+
+    public void resetShip(){
+        destroyed = false;
+        hp = 1;
+        pos.x = 0;
+        setBottom(worldBounds.getBottom() + MARGIN);
     }
 }
