@@ -5,22 +5,37 @@ import com.mygdx.game.base.ScaledButton;
 import com.mygdx.game.math.Rect;
 import com.mygdx.game.pool.BulletPool;
 import com.mygdx.game.pool.EnemyPool;
+import com.mygdx.game.pool.ExplosionPool;
 import com.mygdx.game.screen.GameScreen;
 
 import java.util.List;
 
 public class ButtonNewGame extends ScaledButton {
-    private MainShip mainShip;
-    GameScreen.State state;
-    EnemyPool enemyPool;
-    BulletPool bulletPool;
 
-    public ButtonNewGame(TextureAtlas atlas, GameScreen.State state, MainShip mainShip, EnemyPool enemyPool, BulletPool bulletPool) {
+    private static final float ANIMATE_INTERVAL = 0.5f;
+
+    private float animateTimer;
+    private boolean scaleUp = true;
+
+    GameScreen gameScreen;
+
+    public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen) {
         super(atlas.findRegion("button_new_game"));
-        this.mainShip = mainShip;
-        this.state = state;
-        this.enemyPool = enemyPool;
-        this.bulletPool = bulletPool;
+        this.gameScreen = gameScreen;
+    }
+
+    @Override
+    public void update(float delta) {
+        animateTimer += delta;
+        if(animateTimer >= ANIMATE_INTERVAL){
+            animateTimer = 0;
+            scaleUp = !scaleUp;
+        }
+        if(scaleUp){
+            setScale(getScale() + 0.002f);
+        } else {
+            setScale(getScale() - 0.002f);
+        }
     }
 
     @Override
@@ -31,19 +46,6 @@ public class ButtonNewGame extends ScaledButton {
 
     @Override
     public void action() {
-        state = GameScreen.State.PLAYING;
-        mainShip.resetShip();
-        List<Enemy> enemyList = enemyPool.getActiveObjects();
-        List<Bullet> bulletList = bulletPool.getActiveObjects();
-        for(Enemy enemy : enemyList){
-            enemy.destroy();
-        }
-        for(Bullet bullet : bulletList){
-            bullet.destroy();
-        }
-    }
-
-    public GameScreen.State getState() {
-        return state;
+        gameScreen.startNewGame();
     }
 }

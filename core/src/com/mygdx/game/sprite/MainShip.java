@@ -13,7 +13,7 @@ public class MainShip extends Ship {
     private static final float SIZE = 0.15f;
     private static final float MARGIN = 0.05f;
     private static final int INVALID_POINTER = -1;
-    private static final int HP = 1;
+    private static final int HP = 10;
 
     private int leftPointer;
     private int rightPointer;
@@ -188,9 +188,12 @@ public class MainShip extends Ship {
     }
 
     public void resetShip(){
-        destroyed = false;
-        hp = 1;
+        flushDestroy();
+        hp = HP;
         pos.x = 0;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+        stop();
         setBottom(worldBounds.getBottom() + MARGIN);
     }
 }
