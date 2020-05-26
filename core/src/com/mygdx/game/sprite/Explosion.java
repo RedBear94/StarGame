@@ -39,6 +39,4 @@ public class Explosion extends Sprite {
         super.destroy();
         frame = 0;
     }
-
-
 }
